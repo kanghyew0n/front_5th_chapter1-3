@@ -1,9 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState, createContext, useContext } from "react";
-import { generateItems } from "./utils";
-import { Header } from "./components/Header";
-import { ItemList } from "./components/ItemList";
-import { ComplexForm } from "./components/ComplexForm";
-import { NotificationSystem } from "./components/NotificationSystem";
+import { Home } from "./components/Home";
 
 interface User {
   id: number;
@@ -17,25 +14,55 @@ interface Notification {
   type: "info" | "success" | "warning" | "error";
 }
 
-// AppContext 타입 정의
-interface AppContextType {
-  theme: string;
-  toggleTheme: () => void;
-  user: User | null;
-  login: (email: string, password: string) => void;
-  logout: () => void;
+// Notification 타입 정의
+interface NotificationContextType {
   notifications: Notification[];
   addNotification: (message: string, type: Notification["type"]) => void;
   removeNotification: (id: number) => void;
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+interface themeContextType {
+  theme: string;
+  toggleTheme: () => void;
+}
 
-// 커스텀 훅: useAppContext
-export const useAppContext = () => {
-  const context = useContext(AppContext);
+interface userContextType {
+  user: User | null;
+  login: (email: string, password: string) => void;
+  logout: () => void;
+}
+
+const NotificationContext = createContext<NotificationContextType | undefined>(
+  undefined,
+);
+const ThemeContext = createContext<themeContextType | undefined>(undefined);
+const UserContext = createContext<userContextType | undefined>(undefined);
+
+// 커스텀 훅: useNotificationContext
+export const useNotificationContext = () => {
+  const context = useContext(NotificationContext);
   if (context === undefined) {
-    throw new Error("useAppContext must be used within an AppProvider");
+    throw new Error(
+      "useNotificationContext must be used within an AppProvider",
+    );
+  }
+  return context;
+};
+
+// 커스텀 훅: useThemeContext
+export const useThemeContext = () => {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error("useThemeContext must be used within an ThemeProvider");
+  }
+  return context;
+};
+
+// 커스텀 훅: useUserContext
+export const useUserContext = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUserContext must be used within an UserProvider");
   }
   return context;
 };
@@ -43,19 +70,11 @@ export const useAppContext = () => {
 // 메인 App 컴포넌트
 const App: React.FC = () => {
   const [theme, setTheme] = useState("light");
-  const [items, setItems] = useState(generateItems(1000));
   const [user, setUser] = useState<User | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
-
-  const addItems = () => {
-    setItems((prevItems) => [
-      ...prevItems,
-      ...generateItems(1000, prevItems.length),
-    ]);
   };
 
   const login = (email: string) => {
@@ -83,36 +102,31 @@ const App: React.FC = () => {
     );
   };
 
-  const contextValue: AppContextType = {
-    theme,
-    toggleTheme,
-    user,
-    login,
-    logout,
+  const contextValue: NotificationContextType = {
     notifications,
     addNotification,
     removeNotification,
   };
 
+  const themeContextValue: themeContextType = {
+    theme,
+    toggleTheme,
+  };
+
+  const userContextValue: userContextType = {
+    user,
+    login,
+    logout,
+  };
+
   return (
-    <AppContext.Provider value={contextValue}>
-      <div
-        className={`min-h-screen ${theme === "light" ? "bg-gray-100" : "bg-gray-900 text-white"}`}
-      >
-        <Header />
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row">
-            <div className="w-full md:w-1/2 md:pr-4">
-              <ItemList items={items} onAddItemsClick={addItems} />
-            </div>
-            <div className="w-full md:w-1/2 md:pl-4">
-              <ComplexForm />
-            </div>
-          </div>
-        </div>
-        <NotificationSystem />
-      </div>
-    </AppContext.Provider>
+    <ThemeContext.Provider value={themeContextValue}>
+      <UserContext.Provider value={userContextValue}>
+        <NotificationContext.Provider value={contextValue}>
+          <Home />
+        </NotificationContext.Provider>
+      </UserContext.Provider>
+    </ThemeContext.Provider>
   );
 };
 

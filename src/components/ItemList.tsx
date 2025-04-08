@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAppContext } from "../App";
+import { useThemeContext } from "../App";
 import { renderLog } from "../utils";
 
 interface Item {
@@ -15,7 +15,7 @@ export const ItemList: React.FC<{
 }> = ({ items, onAddItemsClick }) => {
   renderLog("ItemList rendered");
   const [filter, setFilter] = useState("");
-  const { theme } = useAppContext();
+  const { theme } = useThemeContext();
 
   const filteredItems = items.filter(
     (item) =>
