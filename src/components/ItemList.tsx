@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useThemeContext } from "../App";
+import { useThemeContext } from "../contexts";
 import { renderLog } from "../utils";
 
 interface Item {

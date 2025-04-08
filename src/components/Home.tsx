@@ -4,7 +4,7 @@ import { ComplexForm } from "./ComplexForm";
 import { Header } from "./Header";
 import { ItemList } from "./ItemList";
 import { NotificationSystem } from "./NotificationSystem";
-import { useThemeContext } from "../App";
+import { useThemeContext } from "../contexts";
 
 export const Home = () => {
   const [items, setItems] = useState(generateItems(1000));

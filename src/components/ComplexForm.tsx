@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNotificationContext } from "../App";
+import { useNotificationContext } from "../contexts/NotificationContext";
 import { renderLog } from "../utils";
 
 // ComplexForm 컴포넌트

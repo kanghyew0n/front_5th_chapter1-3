@@ -1,5 +1,5 @@
 import { memo } from "../@lib";
-import { useThemeContext, useUserContext } from "../App";
+import { useThemeContext, useUserContext } from "../contexts";
 import { renderLog } from "../utils";
 
 export const Header: React.FC = memo(() => {

@@ -1,4 +1,4 @@
-import { useNotificationContext } from "../App";
+import { useNotificationContext } from "../contexts";
 import { renderLog } from "../utils";
 
 export const NotificationSystem: React.FC = () => {
