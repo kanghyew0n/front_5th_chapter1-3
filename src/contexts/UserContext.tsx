@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { useNotificationContext } from "./NotificationContext";
-import { useMemo } from "../@lib";
+import { useCallback, useMemo } from "../@lib";
 
 interface User {
   id: number;
@@ -22,19 +22,20 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const { addNotification } = useNotificationContext();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const login = (email: string) => {
-    console.log(">> login");
-    setUser({ id: 1, name: "홍길동", email });
-    addNotification("성공적으로 로그인되었습니다", "success");
-  };
+  const login = useCallback(
+    (email: string) => {
+      console.log(">> login");
+      setUser({ id: 1, name: "홍길동", email });
+      addNotification("성공적으로 로그인되었습니다", "success");
+    },
+    [addNotification],
+  );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const logout = () => {
+  const logout = useCallback(() => {
     console.log(">> logout");
     setUser(null);
     addNotification("로그아웃되었습니다", "info");
-  };
+  }, [addNotification]);
 
   const userContextValue: userContextType = useMemo(() => {
     return {
