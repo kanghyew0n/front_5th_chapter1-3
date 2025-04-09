@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useCallback, useMemo } from "../@lib";
 
 interface Notification {
   id: number;
@@ -18,30 +19,39 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  console.log(">> NotificationProvider");
 
-  const addNotification = (message: string, type: Notification["type"]) => {
-    const newNotification: Notification = {
-      id: Date.now(),
-      message,
-      type,
-    };
-    setNotifications((prev) => [...prev, newNotification]);
-  };
+  const addNotification = useCallback(
+    (message: string, type: Notification["type"]) => {
+      console.log(">> addNotification");
 
-  const removeNotification = (id: number) => {
+      const newNotification: Notification = {
+        id: Date.now(),
+        message,
+        type,
+      };
+      setNotifications((prev) => [...prev, newNotification]);
+    },
+    [],
+  );
+
+  const removeNotification = useCallback((id: number) => {
+    console.log(">> removeNotification");
     setNotifications((prev) =>
       prev.filter((notification) => notification.id !== id),
     );
-  };
+  }, []);
 
-  const contextValue: NotificationContextType = {
-    notifications,
-    addNotification,
-    removeNotification,
-  };
+  const notificationContextValue: NotificationContextType = useMemo(() => {
+    return {
+      notifications,
+      addNotification,
+      removeNotification,
+    };
+  }, [notifications, addNotification, removeNotification]);
 
   return (
-    <NotificationContext.Provider value={contextValue}>
+    <NotificationContext.Provider value={notificationContextValue}>
       {children}
     </NotificationContext.Provider>
   );
@@ -49,6 +59,8 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useNotificationContext = () => {
+  console.log(">> useNotificationContext");
+
   const context = useContext(NotificationContext);
   if (context === undefined) {
     throw new Error(
@@ -57,3 +69,20 @@ export const useNotificationContext = () => {
   }
   return context;
 };
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useNotificationSelector = <T,>(
+  selector: (context: NotificationContextType) => T,
+): T => {
+  const context = useContext(NotificationContext);
+  if (!context) {
+    throw new Error(
+      "useNotificationSelector must be used within a NotificationProvider",
+    );
+  }
+  return selector(context);
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAddNotification = () =>
+  useNotificationSelector((ctx) => ctx.addNotification);

@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { useNotificationContext } from "./NotificationContext";
+import { useMemo } from "../@lib";
 
 interface User {
   id: number;
@@ -16,24 +17,32 @@ interface userContextType {
 const UserContext = createContext<userContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+  console.log(">> UserProvider");
+
   const [user, setUser] = useState<User | null>(null);
   const { addNotification } = useNotificationContext();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const login = (email: string) => {
+    console.log(">> login");
     setUser({ id: 1, name: "홍길동", email });
     addNotification("성공적으로 로그인되었습니다", "success");
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const logout = () => {
+    console.log(">> logout");
     setUser(null);
     addNotification("로그아웃되었습니다", "info");
   };
 
-  const userContextValue: userContextType = {
-    user,
-    login,
-    logout,
-  };
+  const userContextValue: userContextType = useMemo(() => {
+    return {
+      user,
+      login,
+      logout,
+    };
+  }, [user, login, logout]);
 
   return (
     <UserContext.Provider value={userContextValue}>
@@ -44,6 +53,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useUserContext = () => {
+  console.log(">> useUserContext");
+
   const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error("useUserContext must be used within an UserProvider");
