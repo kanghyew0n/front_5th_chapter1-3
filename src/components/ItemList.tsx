@@ -1,22 +1,21 @@
 import { useState } from "react";
 import { useThemeContext } from "../contexts";
-import { renderLog } from "../utils";
-import { useMemo } from "../@lib";
+import { generateItems, renderLog } from "../utils";
+import { memo, useCallback, useMemo } from "../@lib";
 
-interface Item {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-}
-
-export const ItemList: React.FC<{
-  items: Item[];
-  onAddItemsClick: () => void;
-}> = ({ items, onAddItemsClick }) => {
+export const ItemList: React.FC = memo(() => {
   renderLog("ItemList rendered");
   const [filter, setFilter] = useState("");
+  const [items, setItems] = useState(() => generateItems(1000));
+
   const { theme } = useThemeContext();
+
+  const onAddItemsClick = useCallback(() => {
+    setItems((prevItems) => [
+      ...prevItems,
+      ...generateItems(1000, prevItems.length),
+    ]);
+  }, []);
 
   const filteredItems = useMemo(() => {
     return items.filter(
@@ -72,4 +71,4 @@ export const ItemList: React.FC<{
       </ul>
     </div>
   );
-};
+});

@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { generateItems } from "../utils";
 import { ComplexForm } from "./ComplexForm";
 import { Header } from "./Header";
 import { ItemList } from "./ItemList";
@@ -7,15 +5,7 @@ import { NotificationSystem } from "./NotificationSystem";
 import { useThemeContext } from "../contexts";
 
 export const Home = () => {
-  const [items, setItems] = useState(generateItems(1000));
   const { theme } = useThemeContext();
-
-  const addItems = () => {
-    setItems((prevItems) => [
-      ...prevItems,
-      ...generateItems(1000, prevItems.length),
-    ]);
-  };
 
   return (
     <div
@@ -25,7 +15,7 @@ export const Home = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 md:pr-4">
-            <ItemList items={items} onAddItemsClick={addItems} />
+            <ItemList />
           </div>
           <div className="w-full md:w-1/2 md:pl-4">
             <ComplexForm />
