@@ -1,15 +1,11 @@
 import { createContext, ReactNode, useContext } from "react";
 import { themeContextType } from "./ThemeTypes";
 import { useThemeStore } from "./ThemeStore";
-import { useMemo } from "../../@lib";
 
 const ThemeContext = createContext<themeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  console.log("ThemeProvider");
-  const store = useThemeStore();
-
-  const themeContextValue = useMemo(() => store, [store]);
+  const themeContextValue = useThemeStore();
 
   return (
     <ThemeContext.Provider value={themeContextValue}>

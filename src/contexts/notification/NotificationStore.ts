@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Notification } from "./NotificationTypes";
-import { useCallback } from "../../@lib";
+import { useCallback, useMemo } from "../../@lib";
 
 export const useNotificationStore = () => {
   console.log("useNotificationStore");
@@ -25,9 +25,13 @@ export const useNotificationStore = () => {
     );
   }, []);
 
-  return {
-    notifications,
-    addNotification,
-    removeNotification,
-  };
+  const notificationsContextValue = useMemo(() => {
+    return {
+      notifications,
+      addNotification,
+      removeNotification,
+    };
+  }, [notifications, addNotification, removeNotification]);
+
+  return notificationsContextValue;
 };
