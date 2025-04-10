@@ -19,12 +19,9 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  console.log(">> NotificationProvider");
 
   const addNotification = useCallback(
     (message: string, type: Notification["type"]) => {
-      console.log(">> addNotification");
-
       const newNotification: Notification = {
         id: Date.now(),
         message,
@@ -36,7 +33,6 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const removeNotification = useCallback((id: number) => {
-    console.log(">> removeNotification");
     setNotifications((prev) =>
       prev.filter((notification) => notification.id !== id),
     );
@@ -59,8 +55,6 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useNotificationContext = () => {
-  console.log(">> useNotificationContext");
-
   const context = useContext(NotificationContext);
   if (context === undefined) {
     throw new Error(

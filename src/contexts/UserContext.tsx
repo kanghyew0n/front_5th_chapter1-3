@@ -17,14 +17,11 @@ interface userContextType {
 const UserContext = createContext<userContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  console.log(">> UserProvider");
-
   const [user, setUser] = useState<User | null>(null);
   const { addNotification } = useNotificationContext();
 
   const login = useCallback(
     (email: string) => {
-      console.log(">> login");
       setUser({ id: 1, name: "홍길동", email });
       addNotification("성공적으로 로그인되었습니다", "success");
     },
@@ -32,7 +29,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const logout = useCallback(() => {
-    console.log(">> logout");
     setUser(null);
     addNotification("로그아웃되었습니다", "info");
   }, [addNotification]);
@@ -54,8 +50,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useUserContext = () => {
-  console.log(">> useUserContext");
-
   const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error("useUserContext must be used within an UserProvider");
