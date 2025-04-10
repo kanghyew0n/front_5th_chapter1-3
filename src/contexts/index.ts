@@ -1,6 +1,6 @@
 export {
   useNotificationContext,
   NotificationProvider,
-} from "./NotificationContext";
-export { useThemeContext, ThemeProvider } from "./ThemeContext";
-export { useUserContext, UserProvider } from "./UserContext";
+} from "./notification/NotificationContext";
+export { useThemeContext, ThemeProvider } from "./theme/ThemeContext";
+export { useUserContext, UserProvider } from "./user/UserContext";
